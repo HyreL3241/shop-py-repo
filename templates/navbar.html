@@ -1,0 +1,76 @@
+{% load static %}
+<nav class="navbar navbar-expand-lg navbar-dark bg-secondary fixed-top">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center" href="#">
+            <img src="{% static 'favicon.ico' %}" alt="ShopLift Logo" width="30" height="30" class="me-2">
+            ShopLift
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'home' %}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <div class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="categoriesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Categories
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end animate__animated animate__fadeIn" aria-labelledby="categoriesDropdown">
+                            <li><a class="dropdown-item" href="#mens-clothing">Men's Clothing</a></li>
+                            <li><a class="dropdown-item" href="#womens-clothing">Women's Clothing</a></li>
+                            <li><a class="dropdown-item" href="#kids-clothing">Kids' Clothing</a></li>
+                            <li><a class="dropdown-item" href="#footwear">Footwear</a></li>
+                            <li><a class="dropdown-item" href="#accessories">Accessories</a></li>
+                            <li><a class="dropdown-item" href="#sportswear">Sportswear</a></li>
+                            <li><a class="dropdown-item" href="#outerwear">Outerwear</a></li>
+                            <li><a class="dropdown-item" href="#formalwear">Formalwear</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#featured">Featured</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#testimonials">Testimonials</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#contact">Contact</a>
+                </li>
+            </ul>
+            <div class="d-flex align-items-center ms-lg-4">
+                <!-- Search Bar -->
+                <div class="search-container d-flex align-items-center me-3">
+                    <input type="text" class="form-control search-input" placeholder="Search...">
+                    <button class="btn btn-outline-light search-btn ms-2" id="searchToggle">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+                <!-- Authentication Links -->
+                {% if not user.is_authenticated %}
+                <a href="{% url 'login' %}" class="btn btn-outline-light me-2">Sign In</a>
+                {% else %}
+                <div class="dropdown">
+                    <button class="btn btn-outline-light dropdown-toggle" type="button" id="userMenu" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-user"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu">
+                        <li><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                    </ul>
+                </div>
+                {% endif %}
+                <!-- Shopping Cart -->
+                <a href="#" class="btn btn-outline-light position-relative ms-2">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        3
+                    </span>
+                </a>
+            </div>
+        </div>
+    </div>
+</nav>
