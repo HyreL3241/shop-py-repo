@@ -1,10 +1,11 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .models import Product
+from .models import Product, Category
 from django.contrib.auth import authenticate, login
 from django.shortcuts import redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import logout
+import csv
 
 def login_view(request):
     if request.method == 'POST':
@@ -59,7 +60,42 @@ def search_view(request):
     return render(request, 'product_list.html', {'products': products, 'query': query})
 
 def home(request):
-    return render(request, 'home.html')
+    import_products_from_csv()
+    categories = Category.objects.all()
+    return render(request, 'home.html', {'categories': categories})
 
 def product_view(request):
     return render(request, 'products.html')
+
+def import_products_from_csv():
+    csv_path = r'C:\Users\hyrel\OneDrive\Desktop\shoplift\products.csv'
+
+    try:
+        with open(csv_path, mode='r', encoding='utf-8') as file:
+            reader = csv.DictReader(file)
+
+            for row in reader:
+                # Get or create the category
+                category_name = row.get("Category", "Uncategorized").strip()
+                category, _ = Category.objects.get_or_create(name=category_name)
+
+                # Create and save the product
+                Product.objects.create(
+                    name=row['Product Name'].strip(),
+                    category=category,
+                    image_url=row.get('Image URL', '').strip(),
+                    price=float(row.get('Price (PHP)', 0)),
+                    rating=float(row.get('Rating', 0)),
+                    description=row.get('Description', '').strip(),
+                    available_sizes=row.get('Available Sizes', '').strip(),
+                    available_colors=row.get('Available Colors', '').strip()
+                )
+
+        return HttpResponse("Products imported successfully into SQLite database.")
+
+    except Exception as e:
+        return HttpResponse(f"An error occurred: {str(e)}")
+
+def featured_products(request):
+    products = Product.objects.filter(rating__gte=4.5).values('name', 'category__name', 'image_url', 'price', 'rating')  # Fetch all except Description, Available Sizes, Available Colors
+    return render(request, 'featured.html', {'products': products})
