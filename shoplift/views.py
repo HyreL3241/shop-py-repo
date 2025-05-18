@@ -22,19 +22,23 @@ def login_view(request):
 def register_view(request):
     if request.method == 'POST':
         username = request.POST.get('username')
+        email = request.POST.get('email')
         password = request.POST.get('password')
         confirm_password = request.POST.get('confirm_password')
 
         if password != confirm_password:
             return render(request, 'authentication/register.html', {'error': 'Passwords do not match'})
 
+        if User.objects.filter(username=username).exists():
+            return render(request, 'authentication/register.html', {'error': 'Username already exists'})
+
+        if User.objects.filter(email=email).exists():
+            return render(request, 'authentication/register.html', {'error': 'Email already in use'})
+
         try:
-            if User.objects.filter(username=username).exists():
-                return render(request, 'authentication/register.html', {'error': 'Username already exists'})
-            
-            user = User.objects.create_user(username=username, password=password)
+            user = User.objects.create_user(username=username, password=password, email=email)
             user.save()
-            return redirect('login')  # Redirect to login page after successful registration
+            return redirect('login')
         except Exception as e:
             return render(request, 'authentication/register.html', {'error': str(e)})
 
