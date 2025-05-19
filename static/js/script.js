@@ -34,9 +34,9 @@ window.addEventListener('load', checkFade);
 
 // Handle image loading errors
 document.addEventListener('DOMContentLoaded', function() {
-    const images = document.querySelectorAll('img');
+    const image = document.querySelectorAll('img');
     
-    images.forEach(img => {
+    image.forEach(img => {
         img.addEventListener('error', function() {
             // If image fails to load, show placeholder text
             const parent = this.parentElement;

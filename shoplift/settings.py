@@ -106,7 +106,7 @@ USE_L10N = True
 
 USE_TZ = True
 
-# Static files (CSS, JavaScript, Images)
+# Static files (CSS, JavaScript, image_urls)
 # https://docs.djangoproject.com/en/4.x/howto/static-files/
 
 STATIC_URL = '/static/'

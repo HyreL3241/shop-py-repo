@@ -20,7 +20,7 @@ def login_view(request):
             login(request, user)
             return redirect('home')  # Redirect to the home page after login
         else:
-            return render(request, 'login.html', {'error': 'Invalid username or password'})
+            return render(request, 'authentication/login.html', {'error': 'Invalid username or password'})
     return render(request, 'authentication/login.html')
 
 def register_view(request):
@@ -99,7 +99,7 @@ def import_products_from_csv():
                 Product.objects.create(
                     name=row['Product Name'].strip(),
                     category=category,
-                    image_url=row.get('Image URL', '').strip(),
+                    image_url=row.get('image_url URL', '').strip(),
                     price=float(row.get('Price (PHP)', 0)),
                     rating=float(row.get('Rating', 0)),
                     description=row.get('Description', '').strip(),
