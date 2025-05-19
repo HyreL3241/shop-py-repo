@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-center mt-5">
+    <div class="card shadow p-4" style="max-width: 700px; width: 100%;">
+        <div class="text-center mb-4">
+            <h2 class="mb-2">Order Receipt</h2>
+            <p class="mb-0">Thank you, <strong>{{ user.username }}</strong>! Your order has been placed successfully.</p>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-bordered text-center mb-4">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Product</th>
+                        <th>Qty</th>
+                        <th>Price</th>
+                        <th>Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in order_items %}
+                    <tr>
+                        <td>{{ item.product.name }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>₱{{ item.product.price }}</td>
+                        <td>₱{{ item.subtotal }}</td>
+                    </tr>
+                    {% endfor %}
+                    <tr>
+                        <td colspan="3" class="text-end"><strong>Total:</strong></td>
+                        <td><strong>₱{{ total_price }}</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="text-center">
+            <a href="{% url 'home' %}" class="btn btn-primary px-4">Continue Shopping</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

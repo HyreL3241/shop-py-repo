@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-center mt-5">
+    <div class="card shadow p-4" style="max-width: 700px; width: 100%;">
+        <h2 class="text-center mb-4">Checkout</h2>
+
+        {% if error %}
+        <div class="alert alert-danger">{{ error }}</div>
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="name" class="form-label">Full Name</label>
+                <input type="text" name="name" id="name" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="contact" class="form-label">Contact Number</label>
+                <input type="text" name="contact" id="contact" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="address" class="form-label">Shipping Address</label>
+                <textarea name="address" id="address" class="form-control" rows="3" required></textarea>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label">Payment Method</label>
+                <select name="payment_method" class="form-select" required>
+                    <option value="">Select a method</option>
+                    <option value="GCash">GCash</option>
+                    <option value="PayMaya">PayMaya</option>
+                </select>
+            </div>
+
+            <div class="d-grid">
+                <button type="submit" class="btn btn-success">Place Order</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
