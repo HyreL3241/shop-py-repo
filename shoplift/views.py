@@ -8,7 +8,6 @@ from django.contrib.auth import logout
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum
-import csv
 
 
 def login_view(request):
@@ -52,29 +51,31 @@ def register_view(request):
 def profile_view(request):
     user = request.user
     cart_count = CartItem.objects.filter(user=request.user).aggregate(total=models.Sum('quantity'))['total'] or 0
+    categories = Category.objects.all()[:6]
 
-    return render(request, 'profile.html', {'user': user, 'cart_count': cart_count})
+    return render(request, 'profile.html', {'user': user, 'cart_count': cart_count, 'categories': categories})
 
 def logout_view(request):
     logout(request)
     return redirect('home')  # Redirect to the home page after logout
 
-def product_list(request):
+def product_search(request):
     products = Product.objects.all()
-    return render(request, 'product_list.html', {'products': products})
+    return render(request, 'product_search.html', {'products': products})
 
 def search_view(request):
+    categories = Category.objects.all()[:6]
+
     query = request.GET.get('q', '')
     products = Product.objects.filter(name__icontains=query) if query else []
     cart_count = 0
     if request.user.is_authenticated:
         cart_count = CartItem.objects.filter(user=request.user).aggregate(total=models.Sum('quantity'))['total'] or 0
 
-    return render(request, 'product_list.html', {'products': products, 'query': query, 'cart_count': cart_count})
+    return render(request, 'product_search.html', {'products': products, 'query': query, 'cart_count': cart_count, 'categories': categories})
 
 def home(request):
-    import_products_from_csv()
-    categories = Category.objects.all()
+    categories = Category.objects.all()[:6]
     cart_count = 0
     if request.user.is_authenticated:
         cart_count = CartItem.objects.filter(user=request.user).aggregate(total=models.Sum('quantity'))['total'] or 0
@@ -83,42 +84,14 @@ def home(request):
 def product_view(request):
     return render(request, 'products.html')
 
-def import_products_from_csv():
-    csv_path = r'C:\Users\hyrel\OneDrive\Desktop\shoplift\products.csv'
-
-    try:
-        with open(csv_path, mode='r', encoding='utf-8') as file:
-            reader = csv.DictReader(file)
-
-            for row in reader:
-                # Get or create the category
-                category_name = row.get("Category", "Uncategorized").strip()
-                category, _ = Category.objects.get_or_create(name=category_name)
-
-                # Create and save the product
-                Product.objects.create(
-                    name=row['Product Name'].strip(),
-                    category=category,
-                    image_url=row.get('image_url URL', '').strip(),
-                    price=float(row.get('Price (PHP)', 0)),
-                    rating=float(row.get('Rating', 0)),
-                    description=row.get('Description', '').strip(),
-                    available_sizes=row.get('Available Sizes', '').strip(),
-                    available_colors=row.get('Available Colors', '').strip()
-                )
-
-        return HttpResponse("Products imported successfully into SQLite database.")
-
-    except Exception as e:
-        return HttpResponse(f"An error occurred: {str(e)}")
-
 def featured_products(request):
     products = Product.objects.filter(rating__gte=4.5)
+    categories = Category.objects.all()[:6]
     cart_count = 0
     if request.user.is_authenticated:
         cart_count = CartItem.objects.filter(user=request.user).aggregate(total=models.Sum('quantity'))['total'] or 0
 
-    return render(request, 'featured.html', {'products': products, 'cart_count': cart_count,})
+    return render(request, 'featured.html', {'products': products, 'cart_count': cart_count, 'categories': categories})
 
 @login_required(login_url='/login/')
 def add_to_cart(request, product_id):
@@ -158,6 +131,8 @@ def remove_from_cart(request, product_id):
 
 @login_required(login_url='/login/')
 def cart_view(request):
+    categories = Category.objects.all()[:6]
+
     if request.user.is_authenticated:
         cart_items = CartItem.objects.filter(user=request.user)
         total_price = sum(item.product.price * item.quantity for item in cart_items)
@@ -183,12 +158,14 @@ def cart_view(request):
         'cart_items': cart_items,
         'total_price': total_price,
         'cart_count': cart_count,
+        'categories': categories
     }
     return render(request, 'cart.html', context)
 
 def product_detail(request, product_id):
+    categories = Category.objects.all()[:6]
     product = get_object_or_404(Product, id=product_id)
-    return render(request, 'product_detail.html', {'product': product})
+    return render(request, 'product_detail.html', {'product': product, 'categories': categories})
 
 @login_required(login_url='/login/')
 @require_POST
@@ -234,6 +211,7 @@ def place_order(request):
 @login_required(login_url='/login/')
 def checkout(request):
     cart_count = CartItem.objects.filter(user=request.user).aggregate(total=models.Sum('quantity'))['total'] or 0
+    categories = Category.objects.all()[:6]
 
     if request.method == 'POST':
         name = request.POST.get('name')
@@ -267,11 +245,12 @@ def checkout(request):
         cart_items.delete()
         return redirect('receipt', order_id=order.id)
     
-    return render(request, 'checkout.html', {'cart_count': cart_count,})
+    return render(request, 'checkout.html', {'cart_count': cart_count, 'categories': categories})
 
 @login_required(login_url='/login/')
 def receipt(request, order_id):
     cart_count = CartItem.objects.filter(user=request.user).aggregate(total=models.Sum('quantity'))['total'] or 0
+    categories = Category.objects.all()[:6]
 
     order = get_object_or_404(Order, id=order_id, user=request.user)
     order_items = OrderItem.objects.filter(order=order)
@@ -282,6 +261,22 @@ def receipt(request, order_id):
         'cart_count': cart_count,
         'order': order,
         'order_items': order_items,
-        'total_price': total_price
+        'total_price': total_price,
+        'categories': categories
     }
     return render(request, 'order_receipt.html', context)
+
+def category_products(request, slug):
+    category = get_object_or_404(Category, slug=slug)
+    products = Product.objects.filter(category=category)
+    categories = Category.objects.all()[:6]
+    cart_count = 0
+    if request.user.is_authenticated:
+        cart_count = CartItem.objects.filter(user=request.user).aggregate(total=Sum('quantity'))['total'] or 0
+
+    return render(request, 'category_products.html', {
+        'products': products,
+        'category': category,
+        'categories': categories,
+        'cart_count': cart_count
+    })

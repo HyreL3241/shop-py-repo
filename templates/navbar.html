@@ -57,7 +57,11 @@
                     <ul class="dropdown-menu animate__animated animate__fadeIn" aria-labelledby="categoriesDropdown">
                         {% if categories %}
                             {% for category in categories %}
-                            <li><a class="dropdown-item" href="{{ category.slug }}">{{ category.name }}</a></li>
+                            <li>
+                                <a class="dropdown-item" href="{% url 'category_products' category.slug %}">
+                                    {{ category.name }}
+                                </a>
+                            </li>
                             {% endfor %}
                         {% else %}
                             <li><a class="dropdown-item disabled" href="#">No Categories Available</a></li>
