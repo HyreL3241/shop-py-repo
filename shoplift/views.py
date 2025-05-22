@@ -161,18 +161,10 @@ def add_to_cart(request, product_id):
         return redirect('cart_view')
 
 @login_required(login_url='/login/')
-def remove_from_cart(request, product_id):
+def remove_from_cart(request, cart_item_id):
     if request.method == 'POST':
-        product_key = str(product_id)
-        if request.user.is_authenticated:
-            product = get_object_or_404(Product, id=product_id)
-            CartItem.objects.filter(user=request.user, product=product).delete()
-        else:
-            cart = request.session.get('cart', {})
-            if product_key in cart:
-                del cart[product_key]
-                request.session['cart'] = cart
-                request.session.modified = True
+        cart_item = get_object_or_404(CartItem, id=cart_item_id, user=request.user)
+        cart_item.delete()
         return redirect('cart_view')
 
 @login_required(login_url='/login/')
