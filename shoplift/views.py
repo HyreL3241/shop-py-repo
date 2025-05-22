@@ -8,6 +8,10 @@ from django.contrib.auth import logout
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum
+from django.core.paginator import Paginator
+from django.core.serializers.json import DjangoJSONEncoder
+from django.http import JsonResponse
+from django.template.loader import render_to_string
 
 
 def login_view(request):
@@ -79,7 +83,44 @@ def home(request):
     cart_count = 0
     if request.user.is_authenticated:
         cart_count = CartItem.objects.filter(user=request.user).aggregate(total=models.Sum('quantity'))['total'] or 0
-    return render(request, 'home.html', {'categories': categories, 'cart_count': cart_count,})
+    
+    product_list = Product.objects.all()
+    paginator = Paginator(product_list, 8) # Show 8 products per page.
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
+    return render(request, 'home.html', {'categories': categories, 'cart_count': cart_count, 'page_obj': page_obj})
+
+def load_more_products(request):
+    product_list = Product.objects.all()
+    paginator = Paginator(product_list, 8)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
+    # Debug logging
+    print(f"AJAX Request Headers: {request.headers.get('X-Requested-With')}")
+    print(f"Page number requested: {page_number}")
+    print(f"Has next: {page_obj.has_next()}")
+    
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        products_html = []
+        for product in page_obj:
+            # Create HTML for each product
+            context = {'product': product, 'csrf_token': request.META.get('CSRF_TOKEN', '')}
+            product_html = render_to_string('partials/product_card.html', context, request=request)
+            products_html.append(product_html)
+        
+        data = {
+            'products_html': products_html,
+            'has_next': page_obj.has_next(),
+            'next_page': page_obj.next_page_number() if page_obj.has_next() else None
+        }
+        print(f"Sending AJAX response with {len(products_html)} products")
+        return JsonResponse(data)
+    
+    # Fallback to non-AJAX response
+    print("Non-AJAX request, redirecting to home")
+    return redirect('home')
 
 def product_view(request):
     return render(request, 'products.html')

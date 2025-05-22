@@ -20,4 +20,5 @@ urlpatterns = [
     path('receipt/<int:order_id>/', views.receipt, name='receipt'),
     path('search/', views.search_view, name='search'),
     path('category/<slug:slug>/', views.category_products, name='category_products'),
+    path('load-more-products/', views.load_more_products, name='load_more_products'),
 ]
