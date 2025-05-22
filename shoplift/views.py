@@ -12,6 +12,7 @@ from django.core.paginator import Paginator
 from django.core.serializers.json import DjangoJSONEncoder
 from django.http import JsonResponse
 from django.template.loader import render_to_string
+from math import floor
 
 
 def login_view(request):
@@ -85,7 +86,11 @@ def home(request):
         cart_count = CartItem.objects.filter(user=request.user).aggregate(total=models.Sum('quantity'))['total'] or 0
     
     product_list = Product.objects.all()
-    paginator = Paginator(product_list, 8) # Show 8 products per page.
+    # Round rating to int and annotate products
+    for product in product_list:
+        product.rating_int = min(5, round(product.rating))
+    
+    paginator = Paginator(product_list, 8)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     
