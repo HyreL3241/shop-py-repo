@@ -92,11 +92,26 @@
                             <h5 class="product-title">{{ product.name }}</h5>
                             <div class="d-flex justify-content-between align-items-center">
                                 <span class="product-price">₱{{ product.price }}</span>
-                                <div class="text-warning">
-                                    {% for i in "x"|rjust:product.rating|slice:":" %}<i class="fas fa-star"></i>{% endfor %}
-                                    {% if product.rating|floatformat:1|slice:"-1:" == "5" %}<i class="fas fa-star-half-alt"></i>{% endif %}
-                                    {% for i in "x"|rjust:5|slice:product.rating|slice:":" %}<i class="far fa-star"></i>{% endfor %}
-                                </div>
+                                {% with rating=product.rating|floatformat:1 %}
+                                    {% with full_stars=rating|floatformat:0|int %}
+                                    {% with full_stars=full_stars|cut:""|add:"0"|default_if_none:"0" %}
+                                        {% if full_stars > 5 %}
+                                            {% with full_stars=5 %}
+                                        {% endif %}
+                                        <div class="text-warning">
+                                            {% for i in "12345"|slice:":full_stars" %}
+                                                <i class="fas fa-star"></i>
+                                            {% endfor %}
+                                            {% if rating|floatformat:1 >= full_stars and full_stars < 5 and rating|floatformat:1|stringformat:"s"|slice:"-2" == ".5" %}
+                                                <i class="fas fa-star-half-alt"></i>
+                                            {% endif %}
+                                            {% for i in "12345"|slice:":"|add:"5"|add:"-full_stars"|add:"-1" %}
+                                                <i class="far fa-star"></i>
+                                            {% endfor %}
+                                        </div>
+                                    {% endwith %}
+                                    {% endwith %}
+                                {% endwith %}
                             </div>
                         </div>
                     </div>
@@ -124,7 +139,7 @@
                     </div>
                 </div>
                 <div class="col-lg-6 ps-lg-5 mt-4 mt-lg-0" data-aos="fade-left">
-                    <h2 class="mb-4">Summer Collection 2023</h2>
+                    <h2 class="mb-4">Summer Collection 2025</h2>
                     <p class="lead mb-4">Discover our latest summer collection designed for comfort and style during the hottest months of the year.</p>
                     <ul class="list-unstyled mb-4">
                         <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Breathable fabrics for hot weather</li>
