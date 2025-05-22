@@ -92,26 +92,16 @@
                             <h5 class="product-title">{{ product.name }}</h5>
                             <div class="d-flex justify-content-between align-items-center">
                                 <span class="product-price">₱{{ product.price }}</span>
-                                {% with rating=product.rating|floatformat:1 %}
-                                    {% with full_stars=rating|floatformat:0|int %}
-                                    {% with full_stars=full_stars|cut:""|add:"0"|default_if_none:"0" %}
-                                        {% if full_stars > 5 %}
-                                            {% with full_stars=5 %}
+                                <div class="text-warning">
+                                    {% with full=product.rating|floatformat:0|int %}
+                                        {% if full > 5 %}
+                                            {% with full=5 %}
                                         {% endif %}
-                                        <div class="text-warning">
-                                            {% for i in "12345"|slice:":full_stars" %}
-                                                <i class="fas fa-star"></i>
-                                            {% endfor %}
-                                            {% if rating|floatformat:1 >= full_stars and full_stars < 5 and rating|floatformat:1|stringformat:"s"|slice:"-2" == ".5" %}
-                                                <i class="fas fa-star-half-alt"></i>
-                                            {% endif %}
-                                            {% for i in "12345"|slice:":"|add:"5"|add:"-full_stars"|add:"-1" %}
-                                                <i class="far fa-star"></i>
-                                            {% endfor %}
-                                        </div>
+                                        {% for _ in "x"|rjust:full %}<i class="fas fa-star"></i>{% endfor %}
+                                        {% for _ in "x"|rjust:5|slice:full|stringformat:"s" %}<i class="far fa-star"></i>{% endfor %}
+                                        {% if full > 5 %}{% endwith %}{% endif %}
                                     {% endwith %}
-                                    {% endwith %}
-                                {% endwith %}
+                                </div>
                             </div>
                         </div>
                     </div>
