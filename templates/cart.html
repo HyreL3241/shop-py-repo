@@ -25,6 +25,7 @@
                     <td>₱{{ item.product.price }}</td>
                     <td>₱{{ item.subtotal }}</td>
                     <td>
+                        <button type="submit" name="update" value="{{ item.id }}" class="btn btn-sm btn-outline-primary">Update</button>
                         <form method="post" action="{% url 'remove_from_cart' item.id %}" class="d-inline">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-sm btn-outline-danger">Remove</button>
