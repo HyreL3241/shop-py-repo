@@ -3,41 +3,45 @@
 <div class="container mt-5">
     <h2 class="mb-4">Your Shopping Cart</h2>
     {% if cart_items %}
-    <table class="table table-bordered">
-        <thead class="table-dark">
-            <tr>
-                <th>Product</th>
-                <th>Qty</th>
-                <th>Price</th>
-                <th>Subtotal</th>
-                <th>Remove</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for item in cart_items %}
-            <tr>
-                <td>{{ item.product.name }}</td>
-                <td>{{ item.quantity }}</td>
-                <td>₱{{ item.product.price }}</td>
-                <td>₱{{ item.subtotal }}</td>
-                <td>
-                    <form action="{% url 'remove_from_cart' item.product.id %}" method="POST">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-sm btn-outline-danger">Remove</button>
-                    </form>
-                </td>
-            </tr>
-            {% endfor %}
-            <tr>
-                <td colspan="4" class="text-end"><strong>Total:</strong></td>
-                <td><strong>₱{{ total_price }}</strong></td>
-            </tr>
-        </tbody>
-    </table>
+    <form method="post" action="{% url 'update_cart' %}">
+        {% csrf_token %}
+        <table class="table table-bordered align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Product</th>
+                    <th>Qty</th>
+                    <th>Price</th>
+                    <th>Subtotal</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in cart_items %}
+                <tr>
+                    <td>{{ item.product.name }}</td>
+                    <td style="width: 120px;">
+                        <input type="number" name="quantities_{{ item.id }}" class="form-control form-control-sm" value="{{ item.quantity }}" min="1">
+                    </td>
+                    <td>₱{{ item.product.price }}</td>
+                    <td>₱{{ item.subtotal }}</td>
+                    <td>
+                        <button type="submit" name="update" value="{{ item.id }}" class="btn btn-sm btn-outline-primary">Update</button>
+                        <form method="post" action="{% url 'remove_from_cart' item.id %}" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm btn-outline-danger">Remove</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+                <tr>
+                    <td colspan="3" class="text-end"><strong>Total:</strong></td>
+                    <td colspan="2"><strong>₱{{ total_price }}</strong></td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
     <div class="text-end">
-        <form action="{% url 'checkout' %}" method="GET">
-            <button type="submit" class="btn btn-success btn-lg">Proceed to Checkout</button>
-        </form>
+        <a href="{% url 'checkout' %}" class="btn btn-success btn-lg">Proceed to Checkout</a>
     </div>
     {% else %}
     <p>Your cart is empty.</p>
@@ -45,5 +49,4 @@
 </div>
 {% endblock %}
 
-{% block footer %}
-    {% endblock %}
+{% block footer %}{% endblock %}

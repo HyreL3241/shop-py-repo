@@ -203,6 +203,22 @@ def cart_view(request):
     }
     return render(request, 'cart.html', context)
 
+@require_POST
+@login_required
+def update_cart(request):
+    for key, value in request.POST.items():
+        if key.startswith('quantities_'):
+            try:
+                cart_item_id = key.split('_')[1]
+                cart_item = CartItem.objects.get(id=cart_item_id, user=request.user)
+                quantity = int(value)
+                if quantity > 0:
+                    cart_item.quantity = quantity
+                    cart_item.save()
+            except (ValueError, CartItem.DoesNotExist):
+                continue
+    return redirect('cart')
+
 def product_detail(request, product_id):
     categories = Category.objects.all()[:6]
     product = get_object_or_404(Product, id=product_id)
