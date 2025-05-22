@@ -217,7 +217,7 @@ def update_cart(request):
                     cart_item.save()
             except (ValueError, CartItem.DoesNotExist):
                 continue
-    return redirect('cart')
+    return redirect('cart_view')
 
 def product_detail(request, product_id):
     categories = Category.objects.all()[:6]
