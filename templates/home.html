@@ -93,13 +93,17 @@
                             <div class="d-flex justify-content-between align-items-center">
                                 <span class="product-price">₱{{ product.price }}</span>
                                 <div class="text-warning">
-                                    {% with full=product.rating|floatformat:0|int %}
-                                        {% if full > 5 %}
-                                            {% with full=5 %}
+                                    {% with full=product.rating|floatformat:0 %}
+                                        {% if full|add:"0" > "5" %}
+                                            {% with full="5" %}
                                         {% endif %}
-                                        {% for _ in "x"|rjust:full %}<i class="fas fa-star"></i>{% endfor %}
-                                        {% for _ in "x"|rjust:5|slice:full|stringformat:"s" %}<i class="far fa-star"></i>{% endfor %}
-                                        {% if full > 5 %}{% endwith %}{% endif %}
+                                        {% for _ in "x"|rjust:full %}
+                                            <i class="fas fa-star"></i>
+                                        {% endfor %}
+                                        {% for _ in "x"|rjust:"5"|slice:full|stringformat:"s" %}
+                                            <i class="far fa-star"></i>
+                                        {% endfor %}
+                                        {% if full|add:"0" > "5" %}{% endwith %}{% endif %}
                                     {% endwith %}
                                 </div>
                             </div>
