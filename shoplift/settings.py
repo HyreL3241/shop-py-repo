@@ -60,7 +60,8 @@ AUTHENTICATION_BACKENDS = (
 
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 ACCOUNT_LOGIN_METHOD = "email"
-ACCOUNT_SIGNUP_FIELDS = ['email']
+ACCOUNT_SIGNUP_FIELDS = ['email']  # Ensure email is part of the signup process
+ACCOUNT_AUTHENTICATED_REDIRECT_URL = '/'  # Redirect after login if needed
 LOGIN_REDIRECT_URL = "/"
 
 ROOT_URLCONF = 'shoplift.urls'
