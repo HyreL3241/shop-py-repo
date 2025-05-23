@@ -131,7 +131,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 ACCOUNT_LOGIN_METHOD = "email"
-ACCOUNT_SIGNUP_FIELDS = ['email', 'username']  # Required for default user model
+ACCOUNT_SIGNUP_FIELDS = ['email', 'username']  # required for default user model
+ACCOUNT_USERNAME_REQUIRED = True  # required for default user model
 ACCOUNT_AUTHENTICATED_REDIRECT_URL = '/'
 LOGIN_REDIRECT_URL = "/"
 
