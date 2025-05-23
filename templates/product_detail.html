@@ -19,6 +19,18 @@
 </style>
 
 <div class="container mt-5">
+    <nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb bg-light rounded px-3 py-2">
+        <li class="breadcrumb-item">
+        <a href="{% url 'home' %}">Home</a>
+        </li>
+        <li class="breadcrumb-item">
+        <a href="{% url 'all_products' %}">All Products</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">{{ product.name }}</li>
+    </ol>
+    </nav>
+
     <div class="row">
         <div class="col-md-6">
             <div class="fixed-image-container">

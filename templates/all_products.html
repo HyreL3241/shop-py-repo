@@ -3,6 +3,14 @@
 {% block content %}
 <div class="container mt-5">
     <h1 class="text-center">All Products</h1>
+
+    <nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb bg-light rounded px-3 py-2">
+        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">All Products</li>
+    </ol>
+    </nav>
+
     <div class="row">
         {% for product in products %}
         <div class="col-md-4 mb-4">
