@@ -92,9 +92,7 @@ DATABASES = {
     #     'ENGINE': 'django.db.backends.sqlite3',
     #     'NAME': BASE_DIR / 'db.sqlite3',
     # }
-    'default': dj_database_url.config(
-        default=config('postgresql://shoplift_postgres_user:lykjKk16ohY8Lk25zcPrxyJ1heXgjQtY@dpg-d0o6br8dl3ps73a9u88g-a.oregon-postgres.render.com/shoplift_postgres')
-    )
+    'default': dj_database_url.config(default=config('DATABASE_URL'))
 }
 
 # Password validation
