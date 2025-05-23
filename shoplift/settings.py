@@ -58,12 +58,6 @@ AUTHENTICATION_BACKENDS = (
     'allauth.account.auth_backends.AuthenticationBackend',
 )
 
-ACCOUNT_EMAIL_VERIFICATION = "mandatory"
-ACCOUNT_LOGIN_METHOD = "email"
-ACCOUNT_SIGNUP_FIELDS = ['email']  # Ensure email is part of the signup process
-ACCOUNT_AUTHENTICATED_REDIRECT_URL = '/'  # Redirect after login if needed
-LOGIN_REDIRECT_URL = "/"
-
 ROOT_URLCONF = 'shoplift.urls'
 
 TEMPLATES = [
@@ -144,5 +138,13 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage' 
 # https://docs.djangoproject.com/en/4.x/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+ACCOUNT_LOGIN_METHOD = "email"
+ACCOUNT_SIGNUP_FIELDS = ['email']
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+ACCOUNT_AUTHENTICATED_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = "/"
 
 APPEND_SLASH = False
