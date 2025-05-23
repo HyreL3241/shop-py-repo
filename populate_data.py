@@ -11,7 +11,7 @@ django.setup()
 from shoplift.models import Product, Category
 
 # Load data from JSON file
-with open('data.json', encoding='utf-8') as file:
+with open('products.json', encoding='utf-8') as file:
     products = json.load(file)
 
 for entry in products:
