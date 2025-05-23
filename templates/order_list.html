@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4" style="padding-top: 70px;">
+    <h2 class="text-center mb-4">Your Orders</h2>
+
+    {% if orders %}
+    <div class="row">
+        {% for order in orders %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow">
+                <div class="card-body">
+                    <h5 class="card-title">Order #{{ order.id }}</h5>
+                    <p class="card-text"><strong>Date:</strong> {{ order.created_at|date:"M d, Y H:i" }}</p>
+                    <p class="card-text"><strong>Total:</strong> ₱{{ order.total_price }}</p>
+                    <p class="card-text"><strong>Payment:</strong> {{ order.payment_method }}</p>
+                    <p class="card-text"><strong>Shipping To:</strong> {{ order.name }}</p>
+                </div>
+                <div class="card-footer d-grid">
+                    <a href="{% url 'order_detail' order.id %}" class="btn btn-dark">
+                        <i class="fas fa-receipt"></i> View Details
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-warning text-center my-5 fs-4" role="alert">
+        You have not placed any orders yet.
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

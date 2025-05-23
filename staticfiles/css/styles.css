@@ -19,26 +19,6 @@ body {
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
 }
 
-.hero {
-    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://placehold.co/1920x1080');
-    background-size: cover;
-    background-position: center;
-    height: 100vh;
-    color: white;
-    display: flex;
-    align-items: center;
-}
-
-.hero-content {
-    max-width: 800px;
-}
-
-.hero h1 {
-    font-size: 3.5rem;
-    font-weight: 700;
-    margin-bottom: 1.5rem;
-}
-
 .btn-shop {
     background-color: var(--accent-color) !important;
     color: white !important;

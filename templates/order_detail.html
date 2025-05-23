@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4" style="padding-top: 70px;">
+    <h2 class="text-center mb-4">Order #{{ order.id }}</h2>
+
+    <div class="mb-4">
+        <p><strong>Placed on:</strong> {{ order.created_at|date:"M d, Y H:i" }}</p>
+        <p><strong>Name:</strong> {{ order.name }}</p>
+        <p><strong>Contact:</strong> {{ order.contact }}</p>
+        <p><strong>Shipping Address:</strong> {{ order.address }}</p>
+        <p><strong>Payment Method:</strong> {{ order.payment_method }}</p>
+        <p><strong>Total Price:</strong> ₱{{ order.total_price }}</p>
+    </div>
+
+    {% if order_items %}
+    <div class="row">
+        {% for item in order_items %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <img src="{{ item.product.image_url }}" alt="{{ item.product.name }}" class="img-fluid" style="width: 100%; height: 250px; object-fit: cover;">
+                <div class="card-body">
+                    <h5 class="card-title">{{ item.product.name }}</h5>
+                    <p class="card-text"><strong>Category:</strong> {{ item.product.category.name }}</p>
+                    <p class="card-text"><strong>Price:</strong> ₱{{ item.price }}</p>
+                    <p class="card-text"><strong>Quantity:</strong> {{ item.quantity }}</p>
+                    <p class="card-text"><strong>Subtotal:</strong> ₱{{ item.subtotal }}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-warning text-center my-5 fs-4" role="alert">
+        No items found in this order.
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

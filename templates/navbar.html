@@ -30,10 +30,14 @@
   pointer-events: auto;
 }
 
+.navbar-yellow {
+  background-color: #d1b932;
+}
+
     </style>
 </head>
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-secondary fixed-top">
+<nav class="navbar navbar-expand-lg navbar-dark navbar-yellow fixed-top">
     <div class="container">
         <a class="navbar-brand d-flex align-items-center" href="{% url 'home' %}">
             <img src="{% static 'favicon.ico' %}" alt="ShopLift Logo" width="30" height="30" class="me-2" />
@@ -72,7 +76,10 @@
                     <a class="nav-link" href="#featured">Featured</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#testimonials">Testimonials</a>
+                    <a class="nav-link" href="{% url 'all_products' %}">All Products</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'about_us' %}">About Us</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#contact">Contact</a>
@@ -94,11 +101,13 @@
                 {% else %}
                     <div class="dropdown">
                         <button class="btn btn-outline-light dropdown-toggle" type="button" id="userMenu"
-                            data-bs-toggle="dropdown" aria-expanded="false">
+                                data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="fas fa-user"></i>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu">
                             <li><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>
+                            <li><a class="dropdown-item" href="{% url 'wishlist' %}">Wishlist</a></li>
+                            <li><a class="dropdown-item" href="{% url 'order_list' %}">Orders</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
                         </ul>
@@ -109,9 +118,8 @@
                 <a href="{% url 'cart_view' %}" class="btn btn-outline-light position-relative ms-2" aria-label="Shopping cart">
                     <i class="fas fa-shopping-cart"></i>
                     {% if cart_count > 0 %}
-                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                    <span id="cart-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                         {{ cart_count }}
-                        <span class="visually-hidden">items in cart</span>
                     </span>
                     {% endif %}
                 </a>

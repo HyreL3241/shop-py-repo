@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center">My Wishlist</h1>
+    {% if wishlist %}
+        <div class="row">
+            {% for item in wishlist %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <img src="{{ item.product.image_url }}" alt="{{ item.product.name }}" class="img-fluid" style="width: 100%; height: 250px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ item.product.name }}</h5>
+                        <p class="card-text"><strong>Category:</strong> {{ item.product.category.name }}</p>
+                        <p class="card-text"><strong>Price:</strong> ₱{{ item.product.price }}</p>
+                        <p class="card-text"><strong>Rating:</strong> {{ item.product.rating }} / 5</p>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between">
+                        <a href="{% url 'product_detail' item.product.id %}" class="btn btn-outline-dark">View Details</a>
+                        <form action="{% url 'remove_from_wishlist' item.product.id %}" method="POST">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-heart-broken"></i> Remove
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+    <p class="text-center mt-4">Your wishlist is empty.</p>
+    {% endif %}
+</div>
+{% endblock %}

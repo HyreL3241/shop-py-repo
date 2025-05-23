@@ -17,14 +17,19 @@ class Category(models.Model):
 
 
 class Product(models.Model):
-    name = models.CharField(max_length=200)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products')
-    image_url = models.URLField(max_length=500, blank=True)
+    COLLECTION_CHOICES = [
+        ('men', 'Men'),
+        ('women', 'Women'),
+        ('kids', 'Kids'),
+        ('accessories', 'Accessories'),
+    ]
+    name = models.CharField(max_length=255)
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    rating = models.FloatField()
-    description = models.TextField(blank=True)
-    available_sizes = models.CharField(max_length=100, help_text="Comma-separated sizes, e.g. S, M, L")
-    available_colors = models.CharField(max_length=200, help_text="Comma-separated colors, e.g. Black, Red, Blue")
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    description = models.TextField()
+    rating = models.FloatField(default=0)
+    image_url = models.URLField(blank=True)
+    collection = models.CharField(max_length=20, choices=COLLECTION_CHOICES, default='men')  # ← Add this line
 
     def __str__(self):
         return self.name
@@ -62,3 +67,11 @@ class OrderItem(models.Model):
 
     def __str__(self):
         return f'{self.product.name} ({self.quantity})'
+    
+class Wishlist(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='wishlist_items')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    added_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'product')

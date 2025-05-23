@@ -9,7 +9,7 @@
         <div class="alert alert-danger">{{ error }}</div>
         {% endif %}
 
-        <form method="POST">
+        <form method="POST" action="{% url 'place_order' %}">
             {% csrf_token %}
             <div class="mb-3">
                 <label for="name" class="form-label">Full Name</label>
