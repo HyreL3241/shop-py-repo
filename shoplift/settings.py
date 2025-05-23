@@ -10,6 +10,8 @@ https://docs.djangoproject.com/en/4.x/topics/settings/
 
 import os
 from pathlib import Path
+import dj_database_url
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -71,10 +73,13 @@ WSGI_APPLICATION = 'shoplift.wsgi.application'
 # https://docs.djangoproject.com/en/4.x/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': BASE_DIR / 'db.sqlite3',
+    # }
+    'default': dj_database_url.config(
+        default=config('postgresql://shoplift_postgres_user:lykjKk16ohY8Lk25zcPrxyJ1heXgjQtY@dpg-d0o6br8dl3ps73a9u88g-a.oregon-postgres.render.com/shoplift_postgres')
+    )
 }
 
 # Password validation
